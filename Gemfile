@@ -13,6 +13,15 @@ gem "sprockets-rails"
 
 gem "pg"
 
+# authentication for users
+gem "devise"
+
+#SASS
+gem "sassc-rails"
+
+#Bootstrap
+gem "bootstrap", "~> 5.2"
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 
