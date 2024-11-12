@@ -10,7 +10,55 @@
 #
 require 'roo'
 
-file_name = './lib/seeds/municipalities.xlsx'
-xlsx = Roo::Spreadsheet.open(file_name)
-xlsx.info
-# => Returns basic info about the spreadsheet file
+def create_state(code, name)
+  state = State.new(code: code, name: name)
+  state.save!
+end
+
+def create_municipality()
+  file_name = './lib/seeds/municipalities.xlsx'
+  xlsx = Roo::Spreadsheet.open(file_name)
+  xlsx.info
+  # => Returns basic info about the spreadsheet file
+end
+
+puts "*****************"
+puts "Cleaning the database"
+puts "*****************"
+
+State.destroy_all
+
+
+puts "************************"
+puts 'Creating states'
+puts "************************"
+
+#create_state('RJ', 'Rio de Janeiro')
+create_state('AC', 'Acre')
+create_state('AL', 'Alagoas')
+create_state('AP', 'Amapá')
+create_state('AM', 'Amazonas')
+create_state('BA', 'Bahia')
+create_state('CE', 'Ceará')
+create_state('ES', 'Espírito Santo')
+create_state('GO', 'Goiás')
+create_state('MA', 'Maranhão')
+create_state('MT', 'Mato Grosso')
+create_state('MS', 'Mato Grosso do Sul')
+create_state('MG', 'Minas Gerais')
+create_state('PA', 'Pará')
+create_state('PB', 'Paraíba')
+create_state('PR', 'Paraná')
+create_state('PE', 'Pernambuco')
+create_state('PI', 'Piauí')
+create_state('RJ', 'Rio de Janeiro')
+create_state('RN', 'Rio Grande do Norte')
+create_state('RS', 'Rio Grande do Sul')
+create_state('RO', 'Rondônia')
+create_state('RR', 'Roraima')
+create_state('SC', 'Santa Catarina')
+create_state('SP', 'São Paulo')
+create_state('SE', 'Sergipe')
+create_state('TO', 'Tocantins')
+
+puts "Seeding completed (❁´◡`❁)"
