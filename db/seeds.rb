@@ -7,3 +7,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+#
+require 'roo'
+
+file_name = './lib/seeds/municipalities.xlsx'
+xlsx = Roo::Spreadsheet.open(file_name)
+xlsx.info
+# => Returns basic info about the spreadsheet file
