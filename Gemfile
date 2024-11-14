@@ -22,6 +22,12 @@ gem "sassc-rails"
 #Bootstrap
 gem "bootstrap", "~> 5.2"
 
+#FontAwesome
+gem "font-awesome-sass", "~> 6.1"
+
+#Simple_Form
+gem "simple_form"
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 
