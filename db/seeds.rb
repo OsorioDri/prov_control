@@ -10,6 +10,17 @@
 #
 require 'roo'
 
+def create_admin_user(first_name, last_name, email)
+  # user = User.new(code: code, name: name)
+  # user.save!
+  user = User.create! :first_name => first_name,
+                      :last_name => last_name,
+                      :email => email,
+                      :profile => "Admin",
+                      :password => "123456",
+                      :password_confirmation => "123456"
+end
+
 def create_state(code, name)
   state = State.new(code: code, name: name)
   state.save!
@@ -27,7 +38,13 @@ puts "Cleaning the database"
 puts "*****************"
 
 State.destroy_all
+User.destroy_all
 
+puts "************************"
+puts 'Creating admin user'
+puts "************************"
+
+create_admin_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com')
 
 puts "************************"
 puts 'Creating states'
