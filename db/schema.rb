@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_16_143214) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_16_215200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_143214) do
     t.date "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "municipalities", force: :cascade do |t|
+    t.string "name"
+    t.string "contact_name"
+    t.string "contact_title"
+    t.integer "original_coordinator"
+    t.integer "current_coordinator"
+    t.integer "number_of_attempts"
+    t.date "date_last_attempt"
+    t.boolean "contact_effective"
+    t.date "official_letter_sent"
+    t.boolean "capital_city"
+    t.bigint "state_id", null: false
+    t.bigint "batch_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_id"], name: "index_municipalities_on_batch_id"
+    t.index ["state_id"], name: "index_municipalities_on_state_id"
   end
 
   create_table "states", force: :cascade do |t|
@@ -43,4 +62,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_143214) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "municipalities", "batches"
+  add_foreign_key "municipalities", "states"
+  add_foreign_key "municipalities", "users", column: "current_coordinator"
+  add_foreign_key "municipalities", "users", column: "original_coordinator"
 end

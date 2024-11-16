@@ -31,13 +31,12 @@ def create_batch(date_start, date_end)
   batch.save!
 end
 
-def create_municipality()
-  file_name = './lib/seeds/municipalities.xlsx'
+def create_municipality(file_name)
   xlsx = Roo::Spreadsheet.open(file_name)
-  xlsx.default_sheet = xlsx.sheets[1]
-  puts xlsx.default_sheet
+  # xlsx.default_sheet = xlsx.sheets[1]
+  # puts xlsx.default_sheet
 
-  xlsx.each(id: 'UF', name: "Municipality") do | row |
+  xlsx.each(id: 'uf', name: "municipality_name", coordinator:original_coordinator) do | row |
     p row
     # p row.values
     p row[:name]
@@ -89,11 +88,18 @@ end
 # create_state('SE', 'Sergipe')
 # create_state('TO', 'Tocantins')
 
+# puts "************************"
+# puts 'Creating batches'
+# puts "************************"
+
+# create_batch('20240916', '20241017')
+# create_batch('20240930', '20241017')
+
 puts "************************"
-puts 'Creating batches'
+puts 'Creating municipalities'
 puts "************************"
 
-create_batch('20240916', '20241017')
-create_batch('20240930', '20241017')
+create_municipality('./lib/seeds/municipalities/Lista2.xlsx')
+
 
 puts "Seeding completed (❁´◡`❁)"
