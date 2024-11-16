@@ -12,5 +12,6 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   get "states", to: "states#index"
+  resources :batches
 
 end
