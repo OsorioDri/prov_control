@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  contact_date: 2024-11-17
+  invited: false
+  date_invitation_accepted: 2024-11-17
+  note: MyText
+  municipality: one
+  provider: one
+
+two:
+  contact_date: 2024-11-17
+  invited: false
+  date_invitation_accepted: 2024-11-17
+  note: MyText
+  municipality: two
+  provider: two
