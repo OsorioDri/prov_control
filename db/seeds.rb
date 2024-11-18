@@ -31,15 +31,40 @@ def create_batch(date_start, date_end)
   batch.save!
 end
 
-def create_municipality(file_name)
+def create_municipality(file_name, default_sheet)
   xlsx = Roo::Spreadsheet.open(file_name)
-  # xlsx.default_sheet = xlsx.sheets[1]
-  # puts xlsx.default_sheet
-
-  xlsx.each(id: 'uf', name: "municipality_name", coordinator:original_coordinator) do | row |
-    p row
-    # p row.values
-    p row[:name]
+  xlsx.default_sheet = xlsx.sheets[default_sheet]
+  puts " Default sheet: #{xlsx.default_sheet}"
+  # uf	name	coord-ori	corrd-current	contact-name	contact-title	contact-phone
+  # contact-email	numer-of-attempts	date-last-attempt	contact-effective	date-memo-sent
+  # "name"
+  # "contact_name"
+  # "contact_title"
+  # "original_coordinator"
+  # "number_of_attempts"
+  # "date_last_attempt"
+  # "contact_effective"
+  # "official_letter_sent"
+  # "capital_city"
+  # "state_id"
+  # "batch_id"
+  # "user_id"
+  #
+   xlsx.each(uf: 'uf',
+            name: "name",
+            contact_name: "contact-name",
+            contact_title: "contact-title",
+            original_coordinator: "coord-ori",
+            number_of_attempts: "corrd-current",
+            date_last_attempt: "date-last-attempt",
+            contact_effective: "contact-effective",
+            official_letter_sent: "date-memo-sent",
+            ) do | row |
+     p row
+     p row[:name]
+   end
+  xlsx.each_row_streaming do |row|
+    puts row[3]
   end
 end
 
@@ -48,7 +73,13 @@ end
 # puts "*****************"
 
 # State.destroy_all
+# Batch.destroy_all
 # User.destroy_all
+# Enrollment.destroy_all
+# Phone.destroy_all
+# Email.destroy_all
+# Provider.destroy_all
+# Municipality.destroy_all
 
 # puts "************************"
 # puts 'Creating admin user'
@@ -99,7 +130,8 @@ puts "************************"
 puts 'Creating municipalities'
 puts "************************"
 
-create_municipality('./lib/seeds/municipalities/Lista2.xlsx')
+create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0)
+
 
 
 puts "Seeding completed (❁´◡`❁)"
