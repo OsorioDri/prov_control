@@ -10,13 +10,13 @@
 #
 require 'roo'
 
-def create_admin_user(first_name, last_name, email)
+def create_user(first_name, last_name, email, profile)
   # user = User.new(code: code, name: name)
   # user.save!
   user = User.create! :first_name => first_name,
                       :last_name => last_name,
                       :email => email,
-                      :profile => "Admin",
+                      :profile => profile,
                       :password => "123456",
                       :password_confirmation => "123456"
 end
@@ -68,69 +68,83 @@ def create_municipality(file_name, default_sheet)
   end
 end
 
-# puts "*****************"
-# puts "Cleaning the database"
-# puts "*****************"
+puts "*****************"
+puts "Cleaning the database"
+puts "*****************"
 
-# State.destroy_all
-# Batch.destroy_all
-# User.destroy_all
-# Enrollment.destroy_all
-# Phone.destroy_all
-# Email.destroy_all
-# Provider.destroy_all
-# Municipality.destroy_all
-
-# puts "************************"
-# puts 'Creating admin user'
-# puts "************************"
-
-# create_admin_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com')
-
-# puts "************************"
-# puts 'Creating states'
-# puts "************************"
-
-# #create_state('RJ', 'Rio de Janeiro')
-# create_state('AC', 'Acre')
-# create_state('AL', 'Alagoas')
-# create_state('AP', 'Amapá')
-# create_state('AM', 'Amazonas')
-# create_state('BA', 'Bahia')
-# create_state('CE', 'Ceará')
-# create_state('ES', 'Espírito Santo')
-# create_state('GO', 'Goiás')
-# create_state('MA', 'Maranhão')
-# create_state('MT', 'Mato Grosso')
-# create_state('MS', 'Mato Grosso do Sul')
-# create_state('MG', 'Minas Gerais')
-# create_state('PA', 'Pará')
-# create_state('PB', 'Paraíba')
-# create_state('PR', 'Paraná')
-# create_state('PE', 'Pernambuco')
-# create_state('PI', 'Piauí')
-# create_state('RJ', 'Rio de Janeiro')
-# create_state('RN', 'Rio Grande do Norte')
-# create_state('RS', 'Rio Grande do Sul')
-# create_state('RO', 'Rondônia')
-# create_state('RR', 'Roraima')
-# create_state('SC', 'Santa Catarina')
-# create_state('SP', 'São Paulo')
-# create_state('SE', 'Sergipe')
-# create_state('TO', 'Tocantins')
-
-# puts "************************"
-# puts 'Creating batches'
-# puts "************************"
-
-# create_batch('20240916', '20241017')
-# create_batch('20240930', '20241017')
+State.destroy_all
+Batch.destroy_all
+Enrollment.destroy_all
+Phone.destroy_all
+Email.destroy_all
+Provider.destroy_all
+Municipality.destroy_all
+User.destroy_all
 
 puts "************************"
-puts 'Creating municipalities'
+puts 'Creating users'
 puts "************************"
 
-create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0)
+create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
+
+ailtom = create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
+
+create_user('João', 'Viríssimo', 'joao@sevabrasil.com', 'Coordinator')
+
+create_user('Mara', 'Francy', 'mara@sevabrasil.com', 'Coordinator')
+
+create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
+
+create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
+
+@users_hash.each do |key, value|
+  puts "User #{key} is #{value}"
+end
+
+puts "************************"
+puts 'Creating states'
+puts "************************"
+
+create_state('RJ', 'Rio de Janeiro')
+create_state('AC', 'Acre')
+create_state('AL', 'Alagoas')
+create_state('AP', 'Amapá')
+create_state('AM', 'Amazonas')
+create_state('BA', 'Bahia')
+create_state('CE', 'Ceará')
+create_state('ES', 'Espírito Santo')
+create_state('GO', 'Goiás')
+create_state('MA', 'Maranhão')
+create_state('MT', 'Mato Grosso')
+create_state('MS', 'Mato Grosso do Sul')
+create_state('MG', 'Minas Gerais')
+create_state('PA', 'Pará')
+create_state('PB', 'Paraíba')
+create_state('PR', 'Paraná')
+create_state('PE', 'Pernambuco')
+create_state('PI', 'Piauí')
+create_state('RJ', 'Rio de Janeiro')
+create_state('RN', 'Rio Grande do Norte')
+create_state('RS', 'Rio Grande do Sul')
+create_state('RO', 'Rondônia')
+create_state('RR', 'Roraima')
+create_state('SC', 'Santa Catarina')
+create_state('SP', 'São Paulo')
+create_state('SE', 'Sergipe')
+create_state('TO', 'Tocantins')
+
+puts "************************"
+puts 'Creating batches'
+puts "************************"
+
+create_batch('20240916', '20241017')
+create_batch('20240930', '20241017')
+
+# puts "************************"
+# puts 'Creating municipalities'
+# puts "************************"
+
+# create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0)
 
 
 
