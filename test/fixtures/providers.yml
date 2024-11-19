@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  cnpj: MyString
+  site_url: MyString
+  contact_name: MyString
+  acceptance_date: 2024-11-17
+
+two:
+  name: MyString
+  cnpj: MyString
+  site_url: MyString
+  contact_name: MyString
+  acceptance_date: 2024-11-17

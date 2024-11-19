@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  contact_name: MyString
+  contact-title: MyString
+  number-of-attempts: 1
+  date-last-attempt: 2024-11-16
+  contact-effective: false
+  official-letter-sent: 2024-11-16
+  capital-city: false
+
+two:
+  name: MyString
+  contact_name: MyString
+  contact-title: MyString
+  number-of-attempts: 1
+  date-last-attempt: 2024-11-16
+  contact-effective: false
+  official-letter-sent: 2024-11-16
+  capital-city: false

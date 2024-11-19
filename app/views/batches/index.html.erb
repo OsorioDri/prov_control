@@ -1,0 +1,8 @@
+<div class="container">
+  <h1>Listas recebidas </h1>
+  <ul>
+    <% @batches.each do | batch | %>
+      <li><%= batch.id%> - <%= batch.start_date %> - <%= batch.end_date %>
+    <% end %>
+  </ul>
+</div>

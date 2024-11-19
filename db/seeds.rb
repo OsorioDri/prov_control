@@ -10,13 +10,13 @@
 #
 require 'roo'
 
-def create_admin_user(first_name, last_name, email)
+def create_user(first_name, last_name, email, profile)
   # user = User.new(code: code, name: name)
   # user.save!
   user = User.create! :first_name => first_name,
                       :last_name => last_name,
                       :email => email,
-                      :profile => "Admin",
+                      :profile => profile,
                       :password => "123456",
                       :password_confirmation => "123456"
 end
@@ -26,11 +26,46 @@ def create_state(code, name)
   state.save!
 end
 
-def create_municipality()
-  file_name = './lib/seeds/municipalities.xlsx'
+def create_batch(date_start, date_end)
+  batch = Batch.new(start_date: date_start, end_date: date_end)
+  batch.save!
+end
+
+def create_municipality(file_name, default_sheet)
   xlsx = Roo::Spreadsheet.open(file_name)
-  xlsx.info
-  # => Returns basic info about the spreadsheet file
+  xlsx.default_sheet = xlsx.sheets[default_sheet]
+  puts " Default sheet: #{xlsx.default_sheet}"
+  # uf	name	coord-ori	corrd-current	contact-name	contact-title	contact-phone
+  # contact-email	numer-of-attempts	date-last-attempt	contact-effective	date-memo-sent
+  # "name"
+  # "contact_name"
+  # "contact_title"
+  # "original_coordinator"
+  # "number_of_attempts"
+  # "date_last_attempt"
+  # "contact_effective"
+  # "official_letter_sent"
+  # "capital_city"
+  # "state_id"
+  # "batch_id"
+  # "user_id"
+  #
+   xlsx.each(uf: 'uf',
+            name: "name",
+            contact_name: "contact-name",
+            contact_title: "contact-title",
+            original_coordinator: "coord-ori",
+            number_of_attempts: "corrd-current",
+            date_last_attempt: "date-last-attempt",
+            contact_effective: "contact-effective",
+            official_letter_sent: "date-memo-sent",
+            ) do | row |
+     p row
+     p row[:name]
+   end
+  xlsx.each_row_streaming do |row|
+    puts row[3]
+  end
 end
 
 puts "*****************"
@@ -38,19 +73,39 @@ puts "Cleaning the database"
 puts "*****************"
 
 State.destroy_all
+Batch.destroy_all
+Enrollment.destroy_all
+Phone.destroy_all
+Email.destroy_all
+Provider.destroy_all
+Municipality.destroy_all
 User.destroy_all
 
 puts "************************"
-puts 'Creating admin user'
+puts 'Creating users'
 puts "************************"
 
-create_admin_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com')
+create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
+
+ailtom = create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
+
+create_user('João', 'Viríssimo', 'joao@sevabrasil.com', 'Coordinator')
+
+create_user('Mara', 'Francy', 'mara@sevabrasil.com', 'Coordinator')
+
+create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
+
+create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
+
+@users_hash.each do |key, value|
+  puts "User #{key} is #{value}"
+end
 
 puts "************************"
 puts 'Creating states'
 puts "************************"
 
-#create_state('RJ', 'Rio de Janeiro')
+create_state('RJ', 'Rio de Janeiro')
 create_state('AC', 'Acre')
 create_state('AL', 'Alagoas')
 create_state('AP', 'Amapá')
@@ -77,5 +132,20 @@ create_state('SC', 'Santa Catarina')
 create_state('SP', 'São Paulo')
 create_state('SE', 'Sergipe')
 create_state('TO', 'Tocantins')
+
+puts "************************"
+puts 'Creating batches'
+puts "************************"
+
+create_batch('20240916', '20241017')
+create_batch('20240930', '20241017')
+
+# puts "************************"
+# puts 'Creating municipalities'
+# puts "************************"
+
+# create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0)
+
+
 
 puts "Seeding completed (❁´◡`❁)"
