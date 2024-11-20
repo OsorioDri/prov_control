@@ -13,6 +13,7 @@ class ProvidersController < ApplicationController
   end
 
   def show
+    @provider = Provider.find(params[:id])
   end
 
   private
