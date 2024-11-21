@@ -1,0 +1,28 @@
+<div class="container p-4">
+  <h1 class="text-center h3"><%= @provider.name %></h1>
+
+
+      <div class="row justify-content-center p-2 bg-light rounded">
+        <div class="col-12 col-lg-4 p-1 border border-black rounded me-2">
+          <small><strong>CNPJ:</strong> <%= @provider.cnpj %></small>
+        </div>
+        <div class="col-12 col-lg-4 p-1 border border-black rounded ms-2">
+          <p><strong>URL:</strong> <%= @provider.site_url %></p>
+        </div>
+      </div>
+
+      <div class="row justify-content-center p-2 bg-light rounded">
+        <div class="col-12 col-lg-4 p-1 border border-black rounded me-2">
+          <p><strong>Contato:</strong> <%= @provider.contact_name %></p>
+        </div>
+        <div class="col-12 col-lg-4 p-1 border border-black rounded ms-2">
+          <p><strong>Aceite:</strong> <%= @provider.acceptance_date.strftime("%d/%m/%Y") %></p>
+        </div>
+        <div class="col-12 col-lg-8 p-1 border border-black rounded me-3 mt-4">
+          <small><%= @provider.created_at.strftime("Provedor criado em %d/%m/%Y") %></small>
+        </div>
+      </div>
+
+   
+
+</div>
