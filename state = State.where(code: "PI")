@@ -1,0 +1,62 @@
+=> 
+[[32m#<State:0x00007fe13766b820[0m
+  id: [34m[1m552[0m,
+  code: [31m[1m"[0m[31mRJ[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mRio de Janeiro[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.289674000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.289674000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796ed88[0m
+  id: [34m[1m553[0m,
+  code: [31m[1m"[0m[31mAC[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mAcre[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.294174000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.294174000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796ec48[0m
+  id: [34m[1m554[0m,
+  code: [31m[1m"[0m[31mAL[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mAlagoas[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.297662000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.297662000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796e9c8[0m
+  id: [34m[1m555[0m,
+  code: [31m[1m"[0m[31mAP[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mAmapá[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.302173000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.302173000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796e888[0m
+  id: [34m[1m556[0m,
+  code: [31m[1m"[0m[31mAM[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mAmazonas[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.304863000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.304863000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796e748[0m
+  id: [34m[1m557[0m,
+  code: [31m[1m"[0m[31mBA[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mBahia[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.307429000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.307429000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796e608[0m
+  id: [34m[1m558[0m,
+  code: [31m[1m"[0m[31mCE[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mCeará[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.310164000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.310164000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796e4c8[0m
+  id: [34m[1m559[0m,
+  code: [31m[1m"[0m[31mES[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mEspírito Santo[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.312721000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.312721000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796e388[0m
+  id: [34m[1m560[0m,
+  code: [31m[1m"[0m[31mGO[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mGoiás[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.317773000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.317773000 UTC +00:00[32m>[0m,
+ [32m#<State:0x00007fe13796e248[0m
+  id: [34m[1m561[0m,
+  code: [31m[1m"[0m[31mMA[0m[31m[1m"[0m,
+  name: [31m[1m"[0m[31mMaranhão[0m[31m[1m"[0m,
+  created_at: Fri, 22 Nov 2024 01:47:28.320604000 UTC +00:00,
+  updated_at: Fri, 22 Nov 2024 01:47:28.320604000 UTC +00:00[32m>[0m,
+ [31m[1m"[0m[31m...[0m[31m[1m"[0m]
