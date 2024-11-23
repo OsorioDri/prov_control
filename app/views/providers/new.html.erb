@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-12 bg-light p-4 rounded">
+      <h1 class="h3 text-center">Novo provedor</h1>
+      <%= simple_form_for (@provider) do |f| %>
+        <%= f.input :name, class: 'form-control', label: 'Nome:' %>
+        <%= f.input :cnpj, class: 'form-control', label: 'CNPJ:' %>
+        <%= f.input :site_url, class: 'form-control', label: 'URL do site:' %>
+        <%= f.input :contact_name, class: 'form-control', label: 'Contato:' %>
+        <%= f.input :acceptance_date, class: 'form-control', label: 'Data do aceite:', as: :date %>
+        <div class="d-grid col-6 mx-auto my-3">
+          <%= f.button :submit, 'Criar novo provedor', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
