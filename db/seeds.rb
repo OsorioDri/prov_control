@@ -52,7 +52,8 @@ def create_municipality(file_name, default_sheet)
     user_name_current = row[3].to_s
     user_name_ori = row[2].to_s
     puts "vou fazer o find"
-    user = User.find_by first_name: user_name_current
+    # user = User.find_by first_name: user_name_current
+    user = User.find_by("(first_name = ?) or last_name = ?", user_name_current, user_name_current)
     puts "sai do find"
     unless user.nil?
       puts "user record encontrado: #{user.first_name}"
