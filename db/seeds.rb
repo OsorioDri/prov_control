@@ -11,8 +11,6 @@
 require 'roo'
 
 def create_user(first_name, last_name, email, profile)
-  # user = User.new(code: code, name: name)
-  # user.save!
   user = User.create! :first_name => first_name,
                       :last_name => last_name,
                       :email => email,
@@ -32,12 +30,9 @@ def create_batch(date_start, date_end)
 end
 
 def create_municipality(file_name, default_sheet)
-  # xlsx = Roo::Spreadsheet.open(file_name)
-  # xlsx.default_sheet = xlsx.sheets[default_sheet]
-  # puts " Default sheet: #{xlsx.default_sheet}"
   xlsx = Roo::Excelx.new(file_name)
   xlsx.default_sheet = xlsx.sheets[default_sheet]
-  puts " Default sheet: #{xlsx.default_sheet}"
+  # puts " Default sheet: #{xlsx.default_sheet}"
   # 0-uf	1-name	2-coord-ori	3-corrd-current	4-contact-name	5-contact-title	6-contact-phone
   # 7-contact-email	8-number-of-attempts	9-date-last-attempt	10-contact-effective	11-date-memo-sent
   # "name", "contact_name", "contact_title", "original_coordinator", "number_of_attempts"
@@ -45,12 +40,24 @@ def create_municipality(file_name, default_sheet)
   # "batch_id", "user_id"
   #
   xlsx.each_row_streaming(offset: 1) do |row|
-    # puts row
-    user_current = row[3]
-    user_ori = row[2]
-    state_code = row[0]
-    state = State.where(code: state_code)
-    puts "state do find_by: #{state.id_value}"
+
+    # busca o state_id
+    state_code = row[0].to_s
+    state = State.find_by code: state_code
+    unless state_code.nil?
+      puts "state record encontrado: #{state.id}"
+    end
+
+    # busca user_id od coordenador atual
+    user_name_current = row[3].to_s
+    user_name_ori = row[2].to_s
+    puts "vou fazer o find"
+    user = User.find_by first_name: user_name_current
+    puts "sai do find"
+    unless user.nil?
+      puts "user record encontrado: #{user.first_name}"
+    end
+
   end
 end
 
