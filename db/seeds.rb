@@ -29,7 +29,7 @@ def create_batch(date_start, date_end)
   batch.save!
 end
 
-def create_municipality(file_name, default_sheet)
+def create_municipality(file_name, default_sheet, batch_id)
   xlsx = Roo::Excelx.new(file_name)
   xlsx.default_sheet = xlsx.sheets[default_sheet]
   # puts " Default sheet: #{xlsx.default_sheet}"
@@ -40,15 +40,15 @@ def create_municipality(file_name, default_sheet)
   # "batch_id", "user_id"
   rows = 0
   xlsx.each_row_streaming(offset: 1) do |row|
-
+    puts row[9].type
     # busca o state_id
     state_code = row[0].to_s
     state = State.find_by code: state_code
     unless state_code.nil?
-      puts "state record encontrado: #{state.id}"
+      state_id = state.id
     end
 
-    # busca user_id od coordenador atual
+    # busca user_id do coordenador original e atual
     user_name_current = row[3].to_s
     user = User.find_by("(first_name = ?) or last_name = ?", user_name_current, user_name_current)
     unless user.nil?
@@ -60,6 +60,22 @@ def create_municipality(file_name, default_sheet)
       user_id_original = user.id
     end
 
+    # prepara contact effective?
+    # condition ? code_when_truthy : code_when_falsey
+    row[10].to_s.upcase == "S" ? contact_effective = true :  contact_effective = false
+
+    municipality = Municipality.create! :name => row[1],
+                                        :contact_name => row[4],
+                                        :contact_title => row[5],
+                                        :original_coordinator => user_id_original,
+                                        :number_of_attempts => row[8],
+                                        :date_last_attempt => row[9].to_date,
+                                        :contact_effective => row[10],
+                                        :official_letter_sent => row[11].to_date,
+                                        :capital_city => false,
+                                        :state_id => state_id,
+                                        :batch_id => batch_id,
+                                        :user_id => user_id_current
 
     rows += 1
   end
@@ -71,7 +87,7 @@ puts "Cleaning the database"
 puts "*****************"
 
 # State.destroy_all
-# Batch.destroy_all
+Batch.destroy_all
 # Enrollment.destroy_all
 # Phone.destroy_all
 # Email.destroy_all
@@ -126,13 +142,13 @@ puts "************************"
 puts 'Creating batches'
 puts "************************"
 
-# create_batch('20240916', '20241017')
-# create_batch('20240930', '20241017')
+lista_1 = create_batch('20240916', '20241017')
+lista_2 = create_batch('20240930', '20241017')
 
 puts "************************"
 puts 'Creating municipalities'
 puts "************************"
 
-create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0)
+create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0, lista_2)
 
 puts "Seeding completed (❁´◡`❁)"
