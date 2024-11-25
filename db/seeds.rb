@@ -38,7 +38,7 @@ def create_municipality(file_name, default_sheet)
   # "name", "contact_name", "contact_title", "original_coordinator", "number_of_attempts"
   # "date_last_attempt", "contact_effective", "official_letter_sent", "capital_city", "state_id"
   # "batch_id", "user_id"
-  #
+  rows = 0
   xlsx.each_row_streaming(offset: 1) do |row|
 
     # busca o state_id
@@ -50,16 +50,20 @@ def create_municipality(file_name, default_sheet)
 
     # busca user_id od coordenador atual
     user_name_current = row[3].to_s
-    user_name_ori = row[2].to_s
-    puts "vou fazer o find"
-    # user = User.find_by first_name: user_name_current
     user = User.find_by("(first_name = ?) or last_name = ?", user_name_current, user_name_current)
-    puts "sai do find"
     unless user.nil?
-      puts "user record encontrado: #{user.first_name}"
+      user_id_current = user.id
+    end
+    user_name_ori = row[2].to_s
+    user = User.find_by("(first_name = ?) or last_name = ?", user_name_ori, user_name_ori)
+    unless user.nil?
+      user_id_original = user.id
     end
 
+
+    rows += 1
   end
+  puts "#{rows} lidas da Lista #{file_name}"
 end
 
 puts "*****************"
