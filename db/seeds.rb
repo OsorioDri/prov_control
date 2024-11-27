@@ -72,20 +72,16 @@ def create_municipality(file_name, default_sheet, batch_id)
 
 
     #prepara datas
-    puts "data last attempt lida: #{row[9]} com tipo #{row[9].type}"
-    puts "data memo sent lida: #{row[9]} com tipo #{row[9].type}"
-    puts "batch id: #{batch_id}"
-    puts "number of atttempts lido: #{row[8]} com tipo #{row[8].type}"
-    date_last_attempt = row[9]
-    puts date_last_attempt.type
+    date_last_attempt_d = Date.strptime(row[9].to_s, "%m-%d-%Y")
+    date_official_letter_d = Date.strptime(row[11].to_s, "%m-%d-%Y")
     municipality = Municipality.create! :name => row[1],
                                         :contact_name => row[4],
                                         :contact_title => row[5],
                                         :original_coordinator => user_id_original,
-                                        :number_of_attempts => row[8],
-                                        :date_last_attempt => "10-14-24",
+                                        :number_of_attempts => row[8].to_i,
+                                        :date_last_attempt => date_last_attempt_d,
                                         :contact_effective => row[10],
-                                        :official_letter_sent => "10-14-24",
+                                        :official_letter_sent => date_official_letter_d,
                                         :capital_city => false,
                                         :state_id => state_id,
                                         :batch_id => batch_id,
