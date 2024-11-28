@@ -94,7 +94,28 @@ def create_municipality(file_name, default_sheet, batch_id)
                                         :state_id => state_id,
                                         :batch_id => batch_id.id,
                                         :user_id => user_id_current
-    # p municipality
+    # p municipality.id
+    # create phone number create_table "phones", force: :cascade do |t|
+    # t.string "number"
+    # t.bigint "municipality_id", null: false
+    # t.datetime "created_at", null: false
+    # t.datetime "updated_at", null: false
+    # t.index ["municipality_id"], name: "index_phones_on_municipality_id"
+    p municipality
+
+    # phone = Phone.create! :number => row[6].to_s,
+                          # :municipality_id => municipality.id
+    # p phone
+    # create email create_table "emails", force: :cascade do |t|
+    # t.string "address"
+    # t.bigint "municipality_id", null: false
+    # t.datetime "created_at", null: false
+    # t.datetime "updated_at", null: false
+    # t.index ["municipality_id"], name: "index_emails_on_municipality_id"
+    # email = Email.create! :address => row[7].to_s,
+                          # :municipality_id => municipality.id
+    # p email
+
     rows += 1
   end
   puts "#{rows} lidas da Lista #{file_name}"
@@ -108,8 +129,8 @@ puts "*****************"
 Municipality.destroy_all
 # State.destroy_all
 Batch.destroy_all
-# Phone.destroy_all
-# Email.destroy_all
+Phone.destroy_all
+Email.destroy_all
 # Provider.destroy_all
 # User.destroy_all
 
@@ -156,9 +177,9 @@ Batch.destroy_all
 # create_state('SE', 'Sergipe')
 # create_state('TO', 'Tocantins')
 
-# puts "************************"
-# puts 'Creating batches'
-# puts "************************"
+puts "************************"
+puts 'Creating batches'
+puts "************************"
 
 lista_1 = create_batch('20240916', '20241017')
 lista_2 = create_batch('20240930', '20241017')
@@ -169,5 +190,6 @@ puts 'Creating municipalities'
 puts "************************"
 
 create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0, lista_2)
+
 
 puts "Seeding completed (❁´◡`❁)"
