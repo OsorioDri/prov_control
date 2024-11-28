@@ -2,7 +2,7 @@ class CreatePhones < ActiveRecord::Migration[7.1]
   def change
     create_table :phones do |t|
       t.string :number
-      t.references :municipality, null: false, foreign_key: true
+      t.references :callable, polymorphic: true, null: false
 
       t.timestamps
     end

@@ -94,17 +94,15 @@ def create_municipality(file_name, default_sheet, batch_id)
                                         :state_id => state_id,
                                         :batch_id => batch_id.id,
                                         :user_id => user_id_current
-    # p municipality.id
+
     # create phone number create_table "phones", force: :cascade do |t|
     # t.string "number"
     # t.bigint "municipality_id", null: false
     # t.datetime "created_at", null: false
     # t.datetime "updated_at", null: false
     # t.index ["municipality_id"], name: "index_phones_on_municipality_id"
-    p municipality
-
-    # phone = Phone.create! :number => row[6].to_s,
-                          # :municipality_id => municipality.id
+    phone = Phone.create! :number => row[6].to_s,
+                          :callable => municipality
     # p phone
     # create email create_table "emails", force: :cascade do |t|
     # t.string "address"
@@ -112,8 +110,8 @@ def create_municipality(file_name, default_sheet, batch_id)
     # t.datetime "created_at", null: false
     # t.datetime "updated_at", null: false
     # t.index ["municipality_id"], name: "index_emails_on_municipality_id"
-    # email = Email.create! :address => row[7].to_s,
-                          # :municipality_id => municipality.id
+    email = Email.create! :address => row[7].to_s,
+                          :emailable => municipality
     # p email
 
     rows += 1
@@ -125,57 +123,57 @@ puts "*****************"
 puts "Cleaning the database"
 puts "*****************"
 
-# Enrollment.destroy_all
+Enrollment.destroy_all
 Municipality.destroy_all
-# State.destroy_all
+State.destroy_all
 Batch.destroy_all
 Phone.destroy_all
 Email.destroy_all
-# Provider.destroy_all
-# User.destroy_all
+Provider.destroy_all
+User.destroy_all
 
-# puts "************************"
-# puts 'Creating users'
-# puts "************************"
+puts "************************"
+puts 'Creating users'
+puts "************************"
 
-# create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
-# create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
-# create_user('João', 'Viríssimo', 'joao@sevabrasil.com', 'Coordinator')
-# create_user('Mara', 'Francy', 'mara@sevabrasil.com', 'Coordinator')
-# create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
-# create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
+create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
+create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
+create_user('João', 'Viríssimo', 'joao@sevabrasil.com', 'Coordinator')
+create_user('Mara', 'Francy', 'mara@sevabrasil.com', 'Coordinator')
+create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
+create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
 
-# puts "************************"
-# puts 'Creating states'
-# puts "************************"
+puts "************************"
+puts 'Creating states'
+puts "************************"
 
-# create_state('RJ', 'Rio de Janeiro')
-# create_state('AC', 'Acre')
-# create_state('AL', 'Alagoas')
-# create_state('AP', 'Amapá')
-# create_state('AM', 'Amazonas')
-# create_state('BA', 'Bahia')
-# create_state('CE', 'Ceará')
-# create_state('ES', 'Espírito Santo')
-# create_state('GO', 'Goiás')
-# create_state('MA', 'Maranhão')
-# create_state('MT', 'Mato Grosso')
-# create_state('MS', 'Mato Grosso do Sul')
-# create_state('MG', 'Minas Gerais')
-# create_state('PA', 'Pará')
-# create_state('PB', 'Paraíba')
-# create_state('PR', 'Paraná')
-# create_state('PE', 'Pernambuco')
-# create_state('PI', 'Piauí')
-# create_state('RJ', 'Rio de Janeiro')
-# create_state('RN', 'Rio Grande do Norte')
-# create_state('RS', 'Rio Grande do Sul')
-# create_state('RO', 'Rondônia')
-# create_state('RR', 'Roraima')
-# create_state('SC', 'Santa Catarina')
-# create_state('SP', 'São Paulo')
-# create_state('SE', 'Sergipe')
-# create_state('TO', 'Tocantins')
+create_state('RJ', 'Rio de Janeiro')
+create_state('AC', 'Acre')
+create_state('AL', 'Alagoas')
+create_state('AP', 'Amapá')
+create_state('AM', 'Amazonas')
+create_state('BA', 'Bahia')
+create_state('CE', 'Ceará')
+create_state('ES', 'Espírito Santo')
+create_state('GO', 'Goiás')
+create_state('MA', 'Maranhão')
+create_state('MT', 'Mato Grosso')
+create_state('MS', 'Mato Grosso do Sul')
+create_state('MG', 'Minas Gerais')
+create_state('PA', 'Pará')
+create_state('PB', 'Paraíba')
+create_state('PR', 'Paraná')
+create_state('PE', 'Pernambuco')
+create_state('PI', 'Piauí')
+create_state('RJ', 'Rio de Janeiro')
+create_state('RN', 'Rio Grande do Norte')
+create_state('RS', 'Rio Grande do Sul')
+create_state('RO', 'Rondônia')
+create_state('RR', 'Roraima')
+create_state('SC', 'Santa Catarina')
+create_state('SP', 'São Paulo')
+create_state('SE', 'Sergipe')
+create_state('TO', 'Tocantins')
 
 puts "************************"
 puts 'Creating batches'
@@ -185,9 +183,9 @@ lista_1 = create_batch('20240916', '20241017')
 lista_2 = create_batch('20240930', '20241017')
 # puts lista_2
 
-puts "************************"
-puts 'Creating municipalities'
-puts "************************"
+puts "******************************************"
+puts 'Creating municipalities, phones and emails'
+puts "******************************************"
 
 create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0, lista_2)
 

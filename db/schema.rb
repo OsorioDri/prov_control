@@ -23,10 +23,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_17_161504) do
 
   create_table "emails", force: :cascade do |t|
     t.string "address"
-    t.bigint "municipality_id", null: false
+    t.string "emailable_type", null: false
+    t.bigint "emailable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["municipality_id"], name: "index_emails_on_municipality_id"
+    t.index ["emailable_type", "emailable_id"], name: "index_emails_on_emailable"
   end
 
   create_table "enrollments", force: :cascade do |t|
@@ -64,10 +65,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_17_161504) do
 
   create_table "phones", force: :cascade do |t|
     t.string "number"
-    t.bigint "municipality_id", null: false
+    t.string "callable_type", null: false
+    t.bigint "callable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["municipality_id"], name: "index_phones_on_municipality_id"
+    t.index ["callable_type", "callable_id"], name: "index_phones_on_callable"
   end
 
   create_table "providers", force: :cascade do |t|
@@ -102,11 +104,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_17_161504) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "emails", "municipalities"
   add_foreign_key "enrollments", "municipalities"
   add_foreign_key "enrollments", "providers"
   add_foreign_key "municipalities", "batches"
   add_foreign_key "municipalities", "states"
   add_foreign_key "municipalities", "users"
-  add_foreign_key "phones", "municipalities"
 end
