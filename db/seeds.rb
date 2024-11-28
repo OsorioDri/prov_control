@@ -32,7 +32,7 @@ end
 def create_municipality(file_name, default_sheet, batch_id)
   xlsx = Roo::Excelx.new(file_name)
   xlsx.default_sheet = xlsx.sheets[default_sheet]
-  puts "Batchid = #{batch_id}"
+  # p batch_id.id
   # puts " Default sheet: #{xlsx.default_sheet}"
   # 0-uf	1-name	2-coord-ori	3-corrd-current	4-contact-name	5-contact-title	6-contact-phone
   # 7-contact-email	8-number-of-attempts	9-date-last-attempt	10-contact-effective	11-date-memo-sent
@@ -40,14 +40,13 @@ def create_municipality(file_name, default_sheet, batch_id)
   # "date_last_attempt", "contact_effective", "official_letter_sent", "capital_city", "state_id"
   # "batch_id", "user_id"
   rows = 0
-  xlsx.each_row_streaming(offset: 1, pad_cells: true, max_rows: 2) do |row|
-    puts "row: #{rows}"
+  xlsx.each_row_streaming(offset: 1, pad_cells: true, max_rows: 95) do |row|
+    # puts row[1]
     # busca o state_id
     state_code = row[0].to_s
     state = State.find_by code: state_code
     unless state_code.nil?
       state_id = state.id
-      puts "state code: #{state_code} e state id = #{state_id} e name = #{row[1]}"
     end
 
     # busca user_id do coordenador original e atual
@@ -68,30 +67,34 @@ def create_municipality(file_name, default_sheet, batch_id)
         contact_effective = true
     end
 
-    #prepara number of atttempts
-    puts "number of attempts: #{row[8]}"
-    puts "number of attempts type: #{row[8].type}"
-
-    #batch id tá nill -check
-
+    #prepara number of atttempts - tá vindo como float
+    number_of_attempts = row[8].to_s.to_i
+    if number_of_attempts.nil?
+      number_of_attempts = 0
+    end
 
     #prepara datas
-    date_last_attempt_d = Date.strptime(row[9].to_s, "%m-%d-%Y")
-    date_official_letter_d = Date.strptime(row[11].to_s, "%m-%d-%Y")
+    unless row[9].to_s.nil?
+      date_last_attempt_d = Date.strptime(row[9].to_s, "%m-%d-%y")
+    end
+    unless row[11].to_s.nil?
+      date_official_letter_d = Date.strptime(row[11].to_s, "%m-%d-%y")
+    end
+    # p row[11].formatted_value
 
     municipality = Municipality.create! :name => row[1],
                                         :contact_name => row[4],
                                         :contact_title => row[5],
                                         :original_coordinator => user_id_original,
-                                        :number_of_attempts => row[8],
+                                        :number_of_attempts => number_of_attempts,
                                         :date_last_attempt => date_last_attempt_d,
-                                        :contact_effective => row[10],
+                                        :contact_effective => contact_effective,
                                         :official_letter_sent => date_official_letter_d,
                                         :capital_city => false,
                                         :state_id => state_id,
-                                        :batch_id => batch_id,
+                                        :batch_id => batch_id.id,
                                         :user_id => user_id_current
-
+    # p municipality
     rows += 1
   end
   puts "#{rows} lidas da Lista #{file_name}"
@@ -101,18 +104,18 @@ puts "*****************"
 puts "Cleaning the database"
 puts "*****************"
 
-# State.destroy_all
-# Batch.destroy_all
 # Enrollment.destroy_all
+Municipality.destroy_all
+# State.destroy_all
+Batch.destroy_all
 # Phone.destroy_all
 # Email.destroy_all
 # Provider.destroy_all
-Municipality.destroy_all
 # User.destroy_all
 
-puts "************************"
-puts 'Creating users'
-puts "************************"
+# puts "************************"
+# puts 'Creating users'
+# puts "************************"
 
 # create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
 # create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
@@ -121,9 +124,9 @@ puts "************************"
 # create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
 # create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
 
-puts "************************"
-puts 'Creating states'
-puts "************************"
+# puts "************************"
+# puts 'Creating states'
+# puts "************************"
 
 # create_state('RJ', 'Rio de Janeiro')
 # create_state('AC', 'Acre')
@@ -153,13 +156,13 @@ puts "************************"
 # create_state('SE', 'Sergipe')
 # create_state('TO', 'Tocantins')
 
-puts "************************"
-puts 'Creating batches'
-puts "************************"
+# puts "************************"
+# puts 'Creating batches'
+# puts "************************"
 
 lista_1 = create_batch('20240916', '20241017')
 lista_2 = create_batch('20240930', '20241017')
-puts lista_2
+# puts lista_2
 
 puts "************************"
 puts 'Creating municipalities'
