@@ -69,16 +69,21 @@ def create_municipality(file_name, default_sheet, batch_id)
     end
 
     #prepara number of atttempts
+    puts "number of attempts: #{row[8]}"
+    puts "number of attempts type: #{row[8].type}"
+
+    #batch id tá nill -check
 
 
     #prepara datas
     date_last_attempt_d = Date.strptime(row[9].to_s, "%m-%d-%Y")
     date_official_letter_d = Date.strptime(row[11].to_s, "%m-%d-%Y")
+
     municipality = Municipality.create! :name => row[1],
                                         :contact_name => row[4],
                                         :contact_title => row[5],
                                         :original_coordinator => user_id_original,
-                                        :number_of_attempts => row[8].to_i,
+                                        :number_of_attempts => row[8],
                                         :date_last_attempt => date_last_attempt_d,
                                         :contact_effective => row[10],
                                         :official_letter_sent => date_official_letter_d,
