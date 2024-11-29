@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_17_161504) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_29_220644) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,14 +33,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_17_161504) do
   create_table "enrollments", force: :cascade do |t|
     t.date "contact_date"
     t.boolean "invited"
-    t.date "date_invitation_accepted"
     t.text "note"
     t.bigint "municipality_id", null: false
     t.bigint "provider_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.date "acceptance_date"
     t.index ["municipality_id"], name: "index_enrollments_on_municipality_id"
     t.index ["provider_id"], name: "index_enrollments_on_provider_id"
+    t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
   create_table "municipalities", force: :cascade do |t|
@@ -77,7 +79,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_17_161504) do
     t.string "cnpj"
     t.string "site_url"
     t.string "contact_name"
-    t.date "acceptance_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -106,6 +107,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_17_161504) do
 
   add_foreign_key "enrollments", "municipalities"
   add_foreign_key "enrollments", "providers"
+  add_foreign_key "enrollments", "users"
   add_foreign_key "municipalities", "batches"
   add_foreign_key "municipalities", "states"
   add_foreign_key "municipalities", "users"

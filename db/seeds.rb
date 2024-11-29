@@ -114,76 +114,97 @@ def create_municipality(file_name, default_sheet, batch_id, max_rows)
   puts "#{rows} lidas da Lista #{file_name}"
 end
 
+def create_provider_enrollment(file_name, default_sheet, max_rows)
+  xlsx_prov = Roo::Excelx.new(file_name)
+  xlsx_prov.default_sheet = xlsx.sheets[default_sheet]
+  rows = 0
+  xlsx_prov.each_row_streaming(offset: 1, pad_cells: true, max_rows: max_rows) do |row|
+    p row
+  end
+end
+
 puts "*****************"
 puts "Cleaning the database"
 puts "*****************"
 
 Enrollment.destroy_all
-Municipality.destroy_all
-State.destroy_all
-Batch.destroy_all
-Phone.destroy_all
-Email.destroy_all
-Provider.destroy_all
-User.destroy_all
+# Municipality.destroy_all
+# State.destroy_all
+# Batch.destroy_all
+# Phone.destroy_all
+# Email.destroy_all
+# Provider.destroy_all
+# User.destroy_all
 
-puts "************************"
-puts 'Creating users'
-puts "************************"
+# puts "************************"
+# puts 'Creating users'
+# puts "************************"
 
-create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
-create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
-create_user('João', 'Viríssimo', 'joao@sevabrasil.com', 'Coordinator')
-create_user('Mara', 'Francy', 'mara@sevabrasil.com', 'Coordinator')
-create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
-create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
+# create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
+# create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
+# create_user('João', 'Viríssimo', 'joao@sevabrasil.com', 'Coordinator')
+# create_user('Mara', 'Francy', 'mara@sevabrasil.com', 'Coordinator')
+# create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
+# create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
 
-puts "************************"
-puts 'Creating states'
-puts "************************"
+# puts "************************"
+# puts 'Creating states'
+# puts "************************"
 
-create_state('RJ', 'Rio de Janeiro')
-create_state('AC', 'Acre')
-create_state('AL', 'Alagoas')
-create_state('AP', 'Amapá')
-create_state('AM', 'Amazonas')
-create_state('BA', 'Bahia')
-create_state('CE', 'Ceará')
-create_state('ES', 'Espírito Santo')
-create_state('GO', 'Goiás')
-create_state('MA', 'Maranhão')
-create_state('MT', 'Mato Grosso')
-create_state('MS', 'Mato Grosso do Sul')
-create_state('MG', 'Minas Gerais')
-create_state('PA', 'Pará')
-create_state('PB', 'Paraíba')
-create_state('PR', 'Paraná')
-create_state('PE', 'Pernambuco')
-create_state('PI', 'Piauí')
-create_state('RJ', 'Rio de Janeiro')
-create_state('RN', 'Rio Grande do Norte')
-create_state('RS', 'Rio Grande do Sul')
-create_state('RO', 'Rondônia')
-create_state('RR', 'Roraima')
-create_state('SC', 'Santa Catarina')
-create_state('SP', 'São Paulo')
-create_state('SE', 'Sergipe')
-create_state('TO', 'Tocantins')
+# create_state('RJ', 'Rio de Janeiro')
+# create_state('AC', 'Acre')
+# create_state('AL', 'Alagoas')
+# create_state('AP', 'Amapá')
+# create_state('AM', 'Amazonas')
+# create_state('BA', 'Bahia')
+# create_state('CE', 'Ceará')
+# create_state('ES', 'Espírito Santo')
+# create_state('GO', 'Goiás')
+# create_state('MA', 'Maranhão')
+# create_state('MT', 'Mato Grosso')
+# create_state('MS', 'Mato Grosso do Sul')
+# create_state('MG', 'Minas Gerais')
+# create_state('PA', 'Pará')
+# create_state('PB', 'Paraíba')
+# create_state('PR', 'Paraná')
+# create_state('PE', 'Pernambuco')
+# create_state('PI', 'Piauí')
+# create_state('RJ', 'Rio de Janeiro')
+# create_state('RN', 'Rio Grande do Norte')
+# create_state('RS', 'Rio Grande do Sul')
+# create_state('RO', 'Rondônia')
+# create_state('RR', 'Roraima')
+# create_state('SC', 'Santa Catarina')
+# create_state('SP', 'São Paulo')
+# create_state('SE', 'Sergipe')
+# create_state('TO', 'Tocantins')
 
-puts "************************"
-puts 'Creating batches'
-puts "************************"
+# puts "************************"
+# puts 'Creating batches'
+# puts "************************"
 
-lista_1 = create_batch('20240916', '20241017')
-lista_2 = create_batch('20240930', '20241017')
-# puts lista_2
+# lista_1 = create_batch('20240916', '20241017')
+# lista_2 = create_batch('20240930', '20241017')
+# # puts lista_2
 
-puts "******************************************"
-puts 'Creating municipalities, phones and emails'
-puts "******************************************"
+# puts "******************************************"
+# puts 'Creating municipalities, phones and emails'
+# puts "******************************************"
 
-create_municipality('./lib/seeds/municipalities/Listas.xlsx', 0, nil, 116)
-create_municipality('./lib/seeds/municipalities/Listas.xlsx', 1, lista_1.id, 194)
-create_municipality('./lib/seeds/municipalities/Listas.xlsx', 2, lista_2.id, 95)
+# create_municipality('./lib/seeds/municipalities/Listas.xlsx', 0, nil, 116)
+# create_municipality('./lib/seeds/municipalities/Listas.xlsx', 1, lista_1.id, 194)
+# create_municipality('./lib/seeds/municipalities/Listas.xlsx', 2, lista_2.id, 95)
+
+# carga de provedores / enrollment
+# abrir a planilha de Provedores geral
+# para cada linha:
+# busca chaves user id e municipality id
+# create provider
+# create phone se houver
+# create email se houver
+# create enrollment
+
+create_provider_enrollment('./lib/seeds/providers/Provedores.xlsx', 0, 95)
+
 
 puts "Seeding completed (❁´◡`❁)"
