@@ -97,12 +97,17 @@ def create_municipality(file_name, default_sheet, batch_id, max_rows)
                                         :state_id => state_id,
                                         :batch_id => batch_id,
                                         :user_id => user_id_current
+    number = row[6].to_s
+    unless number.nil?
+      phone = Phone.create! :number => number,
+                            :callable => municipality
+    end
 
-    phone = Phone.create! :number => row[6].to_s,
-                          :callable => municipality
-    email = Email.create! :address => row[7].to_s,
-                          :emailable => municipality
-    # p email
+    address = row[7].to_s
+    unless address.nil?
+      email = Email.create! :address => address,
+                            :emailable => municipality
+    end
 
     rows += 1
   end
