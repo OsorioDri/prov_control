@@ -29,7 +29,7 @@ def create_batch(date_start, date_end)
                         :end_date => date_end
 end
 
-def create_municipality(file_name, default_sheet, batch_id)
+def create_municipality(file_name, default_sheet, batch_id, max_rows)
   xlsx = Roo::Excelx.new(file_name)
   xlsx.default_sheet = xlsx.sheets[default_sheet]
   # p batch_id.id
@@ -40,7 +40,7 @@ def create_municipality(file_name, default_sheet, batch_id)
   # "date_last_attempt", "contact_effective", "official_letter_sent", "capital_city", "state_id"
   # "batch_id", "user_id"
   rows = 0
-  xlsx.each_row_streaming(offset: 1, pad_cells: true, max_rows: 95) do |row|
+  xlsx.each_row_streaming(offset: 1, pad_cells: true, max_rows: max_rows) do |row|
     # puts row[1]
     # busca o state_id
     state_code = row[0].to_s
@@ -75,6 +75,9 @@ def create_municipality(file_name, default_sheet, batch_id)
 
     #prepara datas
     unless row[9].to_s.nil?
+      # p default_sheet
+      # p row[4]
+      # p row[9].to_s
       date_last_attempt_d = Date.strptime(row[9].to_s, "%m-%d-%y")
     end
     unless row[11].to_s.nil?
@@ -92,24 +95,11 @@ def create_municipality(file_name, default_sheet, batch_id)
                                         :official_letter_sent => date_official_letter_d,
                                         :capital_city => false,
                                         :state_id => state_id,
-                                        :batch_id => batch_id.id,
+                                        :batch_id => batch_id,
                                         :user_id => user_id_current
 
-    # create phone number create_table "phones", force: :cascade do |t|
-    # t.string "number"
-    # t.bigint "municipality_id", null: false
-    # t.datetime "created_at", null: false
-    # t.datetime "updated_at", null: false
-    # t.index ["municipality_id"], name: "index_phones_on_municipality_id"
     phone = Phone.create! :number => row[6].to_s,
                           :callable => municipality
-    # p phone
-    # create email create_table "emails", force: :cascade do |t|
-    # t.string "address"
-    # t.bigint "municipality_id", null: false
-    # t.datetime "created_at", null: false
-    # t.datetime "updated_at", null: false
-    # t.index ["municipality_id"], name: "index_emails_on_municipality_id"
     email = Email.create! :address => row[7].to_s,
                           :emailable => municipality
     # p email
@@ -187,7 +177,8 @@ puts "******************************************"
 puts 'Creating municipalities, phones and emails'
 puts "******************************************"
 
-create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0, lista_2)
-
+create_municipality('./lib/seeds/municipalities/Listas.xlsx', 0, nil, 116)
+create_municipality('./lib/seeds/municipalities/Listas.xlsx', 1, lista_1.id, 194)
+create_municipality('./lib/seeds/municipalities/Listas.xlsx', 2, lista_2.id, 95)
 
 puts "Seeding completed (❁´◡`❁)"
