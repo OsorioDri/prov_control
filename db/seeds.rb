@@ -11,8 +11,6 @@
 require 'roo'
 
 def create_user(first_name, last_name, email, profile)
-  # user = User.new(code: code, name: name)
-  # user.save!
   user = User.create! :first_name => first_name,
                       :last_name => last_name,
                       :email => email,
@@ -27,125 +25,236 @@ def create_state(code, name)
 end
 
 def create_batch(date_start, date_end)
-  batch = Batch.new(start_date: date_start, end_date: date_end)
-  batch.save!
+  batch = Batch.create! :start_date => date_start,
+                        :end_date => date_end
 end
 
-def create_municipality(file_name, default_sheet)
-  xlsx = Roo::Spreadsheet.open(file_name)
+def get_state(key)
+  State.find_by(code: key)
+end
+
+def get_municipality(key)
+  Municipality.find_by(name: key)
+end
+
+def get_user(key)
+  User.find_by("first_name = ? or last_name = ?", key, key)
+end
+
+def create_municipality(file_name, default_sheet, batch_id, max_rows)
+  xlsx = Roo::Excelx.new(file_name)
   xlsx.default_sheet = xlsx.sheets[default_sheet]
-  puts " Default sheet: #{xlsx.default_sheet}"
-  # uf	name	coord-ori	corrd-current	contact-name	contact-title	contact-phone
-  # contact-email	numer-of-attempts	date-last-attempt	contact-effective	date-memo-sent
-  # "name"
-  # "contact_name"
-  # "contact_title"
-  # "original_coordinator"
-  # "number_of_attempts"
-  # "date_last_attempt"
-  # "contact_effective"
-  # "official_letter_sent"
-  # "capital_city"
-  # "state_id"
-  # "batch_id"
-  # "user_id"
-  #
-   xlsx.each(uf: 'uf',
-            name: "name",
-            contact_name: "contact-name",
-            contact_title: "contact-title",
-            original_coordinator: "coord-ori",
-            number_of_attempts: "corrd-current",
-            date_last_attempt: "date-last-attempt",
-            contact_effective: "contact-effective",
-            official_letter_sent: "date-memo-sent",
-            ) do | row |
-     p row
-     p row[:name]
-   end
-  xlsx.each_row_streaming do |row|
-    puts row[3]
+  # p batch_id.id
+  # puts " Default sheet: #{xlsx.default_sheet}"
+  # 0-uf	1-name	2-coord-ori	3-corrd-current	4-contact-name	5-contact-title	6-contact-phone
+  # 7-contact-email	8-number-of-attempts	9-date-last-attempt	10-contact-effective	11-date-memo-sent
+  # "name", "contact_name", "contact_title", "original_coordinator", "number_of_attempts"
+  # "date_last_attempt", "contact_effective", "official_letter_sent", "capital_city", "state_id"
+  # "batch_id", "user_id"
+  rows = 0
+  xlsx.each_row_streaming(offset: 1, pad_cells: true, max_rows: max_rows) do |row|
+    # busca o state
+    state = get_state(row[0].to_s)
+
+    # busca user_id do coordenador original e atual
+    user_name_current = row[3].to_s
+    user = User.find_by("(first_name = ?) or last_name = ?", user_name_current, user_name_current)
+    unless user.nil?
+      user_id_current = user.id
+    end
+    user_name_ori = row[2].to_s
+    user = User.find_by("(first_name = ?) or last_name = ?", user_name_ori, user_name_ori)
+    unless user.nil?
+      user_id_original = user.id
+    end
+
+    # prepara contact effective?
+    contact_effective = false
+    if row[10].to_s == "s" || row[10].to_s == "S"
+        contact_effective = true
+    end
+
+    #prepara number of atttempts - tá vindo como float
+    number_of_attempts = row[8].to_s.to_i
+    if number_of_attempts.nil?
+      number_of_attempts = 0
+    end
+
+    #prepara datas
+    unless row[9].to_s.nil?
+      date_last_attempt_d = Date.strptime(row[9].to_s, "%m-%d-%y")
+    end
+    unless row[11].to_s.nil?
+      date_official_letter_d = Date.strptime(row[11].to_s, "%m-%d-%y")
+    end
+
+    municipality = Municipality.create! :name => row[1],
+                                        :contact_name => row[4],
+                                        :contact_title => row[5],
+                                        :original_coordinator => user_id_original,
+                                        :number_of_attempts => number_of_attempts,
+                                        :date_last_attempt => date_last_attempt_d,
+                                        :contact_effective => contact_effective,
+                                        :official_letter_sent => date_official_letter_d,
+                                        :capital_city => false,
+                                        :state_id => state.id,
+                                        :batch_id => batch_id,
+                                        :user_id => user_id_current
+    number = row[6].to_s
+    unless number.nil?
+      phone = Phone.create! :number => number,
+                            :callable => municipality
+    end
+
+    address = row[7].to_s
+    unless address.nil?
+      email = Email.create! :address => address,
+                            :emailable => municipality
+    end
+
+    rows += 1
   end
+  puts "#{rows} lidas da Lista #{file_name}"
+end
+
+def create_provider_enrollment(file_name, default_sheet, max_rows)
+  xlsx_prov = Roo::Excelx.new(file_name)
+  xlsx_prov.default_sheet = xlsx_prov.sheets[default_sheet]
+  rows = 0
+  xlsx_prov.each_row_streaming(offset: 1, pad_cells: true, max_rows: max_rows) do |row|
+    # busca o state_id
+    state = get_state(row[0].to_s)
+    # p state
+    municipality = get_municipality(row[1].to_s)
+    # p municipality
+    user = get_user(row[2].to_s)
+    # p user
+
+    provider = Provider.find_by(name: row[3].to_s)
+
+    unless !provider.nil?
+      provider = Provider.create! :name => row[3],
+                                  :cnpj => row[4],
+                                  :site_url => row[5],
+                                  :contact_name => row[6]
+      number = row[8].to_s
+      unless number.nil?
+        phone = Phone.create! :number => number,
+        :callable => provider
+      end
+      address = row[7].to_s
+      unless address.nil?
+        email = Email.create! :address => address,
+        :emailable => provider
+      end
+      puts ">>>>> criei provider #{row[3]}"
+    end
+
+    invitation_sent = false
+    if row[10].to_s == "s" || row[10].to_s == "S"
+      invitation_sent = true
+    end
+    unless row[9].to_s.nil?
+      contact_date = Date.strptime(row[9].to_s, "%m-%d-%y")
+    end
+    unless row[11].to_s.nil?
+      acceptance_date = Date.strptime(row[11].to_s, "%m-%d-%y")
+    end
+    enrollment = Enrollment.create! :contact_date => contact_date,
+                                    :acceptance_date => acceptance_date,
+                                    :invited => invitation_sent,
+                                    :note => row[12],
+                                    :municipality_id => municipality.id,
+                                    :provider_id => provider.id,
+                                    :user_id => user.id
+    puts ">>>>>>>>>>>>> criei enrollment #{row[1]} com #{row[3]}"
+    rows += 1
+  end
+  puts "#{rows} lidas da Lista #{file_name}"
 end
 
 puts "*****************"
 puts "Cleaning the database"
 puts "*****************"
 
-State.destroy_all
-Batch.destroy_all
 Enrollment.destroy_all
-Phone.destroy_all
-Email.destroy_all
-Provider.destroy_all
-Municipality.destroy_all
-User.destroy_all
-
-puts "************************"
-puts 'Creating users'
-puts "************************"
-
-create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
-
-ailtom = create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
-
-create_user('João', 'Viríssimo', 'joao@sevabrasil.com', 'Coordinator')
-
-create_user('Mara', 'Francy', 'mara@sevabrasil.com', 'Coordinator')
-
-create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
-
-create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
-
-@users_hash.each do |key, value|
-  puts "User #{key} is #{value}"
-end
-
-puts "************************"
-puts 'Creating states'
-puts "************************"
-
-create_state('RJ', 'Rio de Janeiro')
-create_state('AC', 'Acre')
-create_state('AL', 'Alagoas')
-create_state('AP', 'Amapá')
-create_state('AM', 'Amazonas')
-create_state('BA', 'Bahia')
-create_state('CE', 'Ceará')
-create_state('ES', 'Espírito Santo')
-create_state('GO', 'Goiás')
-create_state('MA', 'Maranhão')
-create_state('MT', 'Mato Grosso')
-create_state('MS', 'Mato Grosso do Sul')
-create_state('MG', 'Minas Gerais')
-create_state('PA', 'Pará')
-create_state('PB', 'Paraíba')
-create_state('PR', 'Paraná')
-create_state('PE', 'Pernambuco')
-create_state('PI', 'Piauí')
-create_state('RJ', 'Rio de Janeiro')
-create_state('RN', 'Rio Grande do Norte')
-create_state('RS', 'Rio Grande do Sul')
-create_state('RO', 'Rondônia')
-create_state('RR', 'Roraima')
-create_state('SC', 'Santa Catarina')
-create_state('SP', 'São Paulo')
-create_state('SE', 'Sergipe')
-create_state('TO', 'Tocantins')
-
-puts "************************"
-puts 'Creating batches'
-puts "************************"
-
-create_batch('20240916', '20241017')
-create_batch('20240930', '20241017')
+# Municipality.destroy_all
+# State.destroy_all
+# Batch.destroy_all
+# Phone.destroy_all
+# Email.destroy_all
+# Provider.destroy_all
+# User.destroy_all
 
 # puts "************************"
-# puts 'Creating municipalities'
+# puts 'Creating users'
 # puts "************************"
 
-# create_municipality('./lib/seeds/municipalities/Lista2.xlsx', 0)
+# create_user('Carlos', 'Siqueira', 'carlos.siqueira@sevabrasil.com', 'Admin')
+# create_user('Ailtom', 'Gobira', 'gobira@sevabrasil.com', 'Coordinator')
+# create_user('João', 'Viríssimo', 'joao@sevabrasil.com', 'Coordinator')
+# create_user('Mara', 'Francy', 'mara@sevabrasil.com', 'Coordinator')
+# create_user('Marcello', 'Santo', 'marcelo@sevabrasil.com', 'Coordinator')
+# create_user('Márcia', 'Cavalcante', 'marcia@sevabrasil.com', 'Coordinator')
 
+# puts "************************"
+# puts 'Creating states'
+# puts "************************"
+
+# create_state('RJ', 'Rio de Janeiro')
+# create_state('AC', 'Acre')
+# create_state('AL', 'Alagoas')
+# create_state('AP', 'Amapá')
+# create_state('AM', 'Amazonas')
+# create_state('BA', 'Bahia')
+# create_state('CE', 'Ceará')
+# create_state('ES', 'Espírito Santo')
+# create_state('GO', 'Goiás')
+# create_state('MA', 'Maranhão')
+# create_state('MT', 'Mato Grosso')
+# create_state('MS', 'Mato Grosso do Sul')
+# create_state('MG', 'Minas Gerais')
+# create_state('PA', 'Pará')
+# create_state('PB', 'Paraíba')
+# create_state('PR', 'Paraná')
+# create_state('PE', 'Pernambuco')
+# create_state('PI', 'Piauí')
+# create_state('RJ', 'Rio de Janeiro')
+# create_state('RN', 'Rio Grande do Norte')
+# create_state('RS', 'Rio Grande do Sul')
+# create_state('RO', 'Rondônia')
+# create_state('RR', 'Roraima')
+# create_state('SC', 'Santa Catarina')
+# create_state('SP', 'São Paulo')
+# create_state('SE', 'Sergipe')
+# create_state('TO', 'Tocantins')
+
+# puts "************************"
+# puts 'Creating batches'
+# puts "************************"
+
+# lista_1 = create_batch('20240916', '20241017')
+# lista_2 = create_batch('20240930', '20241017')
+# # puts lista_2
+
+# puts "******************************************"
+# puts 'Creating municipalities, phones and emails'
+# puts "******************************************"
+
+# create_municipality('./lib/seeds/municipalities/Listas.xlsx', 0, nil, 116)
+# create_municipality('./lib/seeds/municipalities/Listas.xlsx', 1, lista_1.id, 194)
+# create_municipality('./lib/seeds/municipalities/Listas.xlsx', 2, lista_2.id, 95)
+
+# carga de provedores / enrollment
+# abrir a planilha de Provedores geral
+# para cada linha:
+# busca chaves user id e municipality id
+# create provider
+# create phone se houver
+# create email se houver
+# create enrollment
+
+create_provider_enrollment('./lib/seeds/providers/Provedores.xlsx', 0, 301)
 
 
 puts "Seeding completed (❁´◡`❁)"
