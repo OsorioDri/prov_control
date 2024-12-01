@@ -29,6 +29,18 @@ def create_batch(date_start, date_end)
                         :end_date => date_end
 end
 
+def get_state(key)
+  State.find_by(code: key)
+end
+
+def get_municipality(key)
+  Municipality.find_by(name: key)
+end
+
+def get_user(key)
+  User.find_by("first_name = ? or last_name = ?", key, key)
+end
+
 def create_municipality(file_name, default_sheet, batch_id, max_rows)
   xlsx = Roo::Excelx.new(file_name)
   xlsx.default_sheet = xlsx.sheets[default_sheet]
@@ -41,13 +53,8 @@ def create_municipality(file_name, default_sheet, batch_id, max_rows)
   # "batch_id", "user_id"
   rows = 0
   xlsx.each_row_streaming(offset: 1, pad_cells: true, max_rows: max_rows) do |row|
-    # puts row[1]
-    # busca o state_id
-    state_code = row[0].to_s
-    state = State.find_by code: state_code
-    unless state_code.nil?
-      state_id = state.id
-    end
+    # busca o state
+    state = get_state(row[0].to_s)
 
     # busca user_id do coordenador original e atual
     user_name_current = row[3].to_s
@@ -75,15 +82,11 @@ def create_municipality(file_name, default_sheet, batch_id, max_rows)
 
     #prepara datas
     unless row[9].to_s.nil?
-      # p default_sheet
-      # p row[4]
-      # p row[9].to_s
       date_last_attempt_d = Date.strptime(row[9].to_s, "%m-%d-%y")
     end
     unless row[11].to_s.nil?
       date_official_letter_d = Date.strptime(row[11].to_s, "%m-%d-%y")
     end
-    # p row[11].formatted_value
 
     municipality = Municipality.create! :name => row[1],
                                         :contact_name => row[4],
@@ -94,7 +97,7 @@ def create_municipality(file_name, default_sheet, batch_id, max_rows)
                                         :contact_effective => contact_effective,
                                         :official_letter_sent => date_official_letter_d,
                                         :capital_city => false,
-                                        :state_id => state_id,
+                                        :state_id => state.id,
                                         :batch_id => batch_id,
                                         :user_id => user_id_current
     number = row[6].to_s
@@ -116,11 +119,58 @@ end
 
 def create_provider_enrollment(file_name, default_sheet, max_rows)
   xlsx_prov = Roo::Excelx.new(file_name)
-  xlsx_prov.default_sheet = xlsx.sheets[default_sheet]
+  xlsx_prov.default_sheet = xlsx_prov.sheets[default_sheet]
   rows = 0
   xlsx_prov.each_row_streaming(offset: 1, pad_cells: true, max_rows: max_rows) do |row|
-    p row
+    # busca o state_id
+    state = get_state(row[0].to_s)
+    # p state
+    municipality = get_municipality(row[1].to_s)
+    # p municipality
+    user = get_user(row[2].to_s)
+    # p user
+
+    provider = Provider.find_by(name: row[3].to_s)
+
+    unless !provider.nil?
+      provider = Provider.create! :name => row[3],
+                                  :cnpj => row[4],
+                                  :site_url => row[5],
+                                  :contact_name => row[6]
+      number = row[8].to_s
+      unless number.nil?
+        phone = Phone.create! :number => number,
+        :callable => provider
+      end
+      address = row[7].to_s
+      unless address.nil?
+        email = Email.create! :address => address,
+        :emailable => provider
+      end
+      puts ">>>>> criei provider #{row[3]}"
+    end
+
+    invitation_sent = false
+    if row[10].to_s == "s" || row[10].to_s == "S"
+      invitation_sent = true
+    end
+    unless row[9].to_s.nil?
+      contact_date = Date.strptime(row[9].to_s, "%m-%d-%y")
+    end
+    unless row[11].to_s.nil?
+      acceptance_date = Date.strptime(row[11].to_s, "%m-%d-%y")
+    end
+    enrollment = Enrollment.create! :contact_date => contact_date,
+                                    :acceptance_date => acceptance_date,
+                                    :invited => invitation_sent,
+                                    :note => row[12],
+                                    :municipality_id => municipality.id,
+                                    :provider_id => provider.id,
+                                    :user_id => user.id
+    puts ">>>>>>>>>>>>> criei enrollment #{row[1]} com #{row[3]}"
+    rows += 1
   end
+  puts "#{rows} lidas da Lista #{file_name}"
 end
 
 puts "*****************"
@@ -204,7 +254,7 @@ Enrollment.destroy_all
 # create email se houver
 # create enrollment
 
-create_provider_enrollment('./lib/seeds/providers/Provedores.xlsx', 0, 95)
+create_provider_enrollment('./lib/seeds/providers/Provedores.xlsx', 0, 301)
 
 
 puts "Seeding completed (❁´◡`❁)"

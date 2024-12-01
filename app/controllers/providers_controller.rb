@@ -17,7 +17,7 @@ class ProvidersController < ApplicationController
   end
 
   def index
-    @providers = Provider.all
+    @providers = Provider.order("name").all
   end
 
   private
