@@ -1,28 +1,19 @@
 <div class="container p-4">
-  <h1 class="text-center h3"><%= @provider.name %></h1>
-
-
-      <div class="row justify-content-center p-2 bg-light rounded">
-        <div class="col-12 col-lg-4 p-1 border border-black rounded me-2">
-          <small><strong>CNPJ:</strong> <%= @provider.cnpj %></small>
-        </div>
-        <div class="col-12 col-lg-4 p-1 border border-black rounded ms-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-12 bg-light p-4 rounded">
+          <p><strong>Razão social:</strong> <%= @provider.name %></p>
+          <p><strong>CNPJ:</strong> <%= @provider.cnpj %></p>
           <p><strong>URL:</strong> <%= @provider.site_url %></p>
-        </div>
-      </div>
-
-      <div class="row justify-content-center p-2 bg-light rounded">
-        <div class="col-12 col-lg-4 p-1 border border-black rounded me-2">
           <p><strong>Contato:</strong> <%= @provider.contact_name %></p>
-        </div>
-        <%# <div class="col-12 col-lg-4 p-1 border border-black rounded ms-2">
-          <p><strong>Aceite:</strong> <%= @provider.acceptance_date.strftime("%d/%m/%Y") %></p>
-        <%# </div> %> %>
-        <div class="col-12 col-lg-8 p-1 border border-black rounded me-3 mt-4">
-          <small><%= @provider.created_at.strftime("Provedor criado em %d/%m/%Y") %></small>
-        </div>
-      </div>
-
-
-
+          <p><strong>Criado em:</strong> <%= @provider.created_at.strftime("%d/%m/%Y") %></p>
+          <p><strong>Atualizado em:</strong> <%= @provider.updated_at.strftime("%d/%m/%Y") %></p>
+          <p>
+          <td><%= link_to providers_path, class: "btn btn-magic" do %>
+            <i class="fas fa-arrow-circle-left"></i>
+          <% end %></td>
+          <td><%= link_to edit_provider_path(params[:id]), class: "btn btn-magic" do %>
+            <i class="fa-solid fa-pencil"></i>
+          <% end %></td>
+    </div>
+  </div>
 </div>
