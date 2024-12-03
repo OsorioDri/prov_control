@@ -1,0 +1,13 @@
+<div class="container p-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-12 bg-light p-4 rounded">
+      <h1 class="h3 text-center">Telefone</h1>
+      <%= simple_form_for (@provider, @phone) do |f| %>
+        <%= f.input :number, class: 'form-control', label: 'Número:' %>
+        <div class="d-grid col-6 mx-auto my-3">
+          <%= f.button :submit, 'Adicionar número', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
