@@ -1,0 +1,16 @@
+<div class="container p-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-12 bg-light p-4 rounded">
+      <h1 class="h3 text-center">Editar dados do provedor</h1>
+      <%= simple_form_for (@provider) do |f| %>
+        <%= f.input :name, class: 'form-control', label: 'Razão social:' %>
+        <%= f.input :cnpj, class: 'form-control', label: 'CNPJ:' %>
+        <%= f.input :site_url, class: 'form-control', label: 'Website:' %>
+        <%= f.input :contact_name, class: 'form-control', label: 'Contato:' %>
+        <div class="d-grid col-6 mx-auto my-3">
+          <%= f.button :submit, 'Salvar', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

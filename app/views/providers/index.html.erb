@@ -1,8 +1,25 @@
 <div class="container p-4">
   <h1>Provedores cadastrados </h1>
-  <ul>
-    <% @providers.each do | provider| %>
-      <li><%= provider.name%> | <%= provider.cnpj %> | <%= provider.contact_name%> | <%= provider.created_at %>
-    <% end %>
-  </ul>
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Razão Social</th>
+        <th>Nome do Contato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @providers.each do | provider| %>
+        <tr>
+          <td><%= provider.name %></td>
+          <td><%= provider.contact_name %></td>
+          <td><%= link_to provider_path(provider), class: "btn btn-magic" do %>
+            <i class="fa-solid fa-magnifying-glass"></i>
+          <% end %></td>
+          <td><%= link_to edit_provider_path(provider), class: "btn btn-magic" do %>
+            <i class="fa-solid fa-pencil"></i>
+          <% end %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

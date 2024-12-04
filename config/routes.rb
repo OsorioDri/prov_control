@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get "states", to: "states#index"
   resources :batches
 
-  resources :providers, only: [:new, :create, :show, :index]
+  resources :providers do
+    resources :phones, only: [:new, :create]
+  end
 
+  resources :phones, only: [:destroy]
 end
