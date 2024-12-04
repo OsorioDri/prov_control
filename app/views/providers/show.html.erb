@@ -1,34 +1,37 @@
 <div class="container p-4">
   <div class="row justify-content-center">
     <div class="col-lg-6 col-12 bg-light p-4 rounded">
-          <p><strong>Razão social:</strong> <%= @provider.name %></p>
-          <p><strong>CNPJ:</strong> <%= @provider.cnpj %></p>
-          <p><strong>URL:</strong> <%= @provider.site_url %></p>
-          <p><strong>Contato:</strong> <%= @provider.contact_name %></p>
-          <p><strong>Criado em:</strong> <%= @provider.created_at.strftime("%d/%m/%Y") %></p>
-          <p><strong>Atualizado em:</strong> <%= @provider.updated_at.strftime("%d/%m/%Y") %></p>
-          <p><strong>Telefone(s):</strong>
-          <%= link_to new_provider_phone_path(@provider), class: "btn btn-magic" do %>
-            <i class="fas fa-plus-circle"></i>
-          <% end %>
-          <ul class="list-group">
-            <% @provider.phones.each do |phone| %>
-              <li class="list-group-item"><%= phone.number %></li>
-            <% end %>
-          </ul>
-          <p>
-          <p><strong>Email(s):</strong>
-          <ul class="list-group">
-            <% @provider.emails.each do |email| %>
-              <li class="list-group-item"><%= email.address %></li>
-            <% end %>
-          </ul>
-          <td><%= link_to providers_path, class: "btn btn-magic" do %>
-            <i class="fas fa-arrow-circle-left"></i>
-          <% end %></td>
-          <td><%= link_to edit_provider_path(params[:id]), class: "btn btn-magic" do %>
-            <i class="fa-solid fa-pencil"></i>
-          <% end %></td>
+      <p><strong>Razão social:</strong> <%= @provider.name %></p>
+      <p><strong>CNPJ:</strong> <%= @provider.cnpj %></p>
+      <p><strong>URL:</strong> <%= @provider.site_url %></p>
+      <p><strong>Contato:</strong> <%= @provider.contact_name %></p>
+      <p><strong>Criado em:</strong> <%= @provider.created_at.strftime("%d/%m/%Y") %></p>
+      <p><strong>Atualizado em:</strong> <%= @provider.updated_at.strftime("%d/%m/%Y") %></p>
+      <td><%= link_to providers_path, class: "btn btn-magic" do %>
+        <i class="fas fa-arrow-circle-left"></i>
+      <% end %></td>
+      <td><%= link_to edit_provider_path(params[:id]), class: "btn btn-magic" do %>
+        <i class="fa-solid fa-pencil"></i>
+      <% end %></td>
+      <hr>
+      <p><strong>Telefone(s):</strong>
+      <%= link_to new_provider_phone_path(@provider), class: "btn btn-magic" do %>
+         <i class="fas fa-plus-circle"></i>
+      <% end %>
+      <ul class="list-group">
+      <% @provider.phones.each do |phone| %>
+        <li class="list-group-item"><%= phone.number %> <%= link_to phone_path(phone), data: {turbo_method: :delete, turbo_confirm: "Deseja realmente excluir este telefone?"} do %>
+         <i class="fa-solid fa-trash"></i>
+        <% end %></li>
+      <% end %>
+      </ul>
+      <hr>
+      <p><strong>Email(s):</strong>
+      <ul class="list-group">
+      <% @provider.emails.each do |email| %>
+        <li class="list-group-item"><%= email.address %></li>
+      <% end %>
+      </ul>
     </div>
   </div>
 </div>

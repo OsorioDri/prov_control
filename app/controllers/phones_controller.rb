@@ -7,16 +7,20 @@ class PhonesController < ApplicationController
 
   def new
     @phone = Phone.new
-
   end
 
   def create
     @phone = Phone.new(phone_params)
-    # set_callable
     @phone.callable_id = @callable.id
     @phone.callable_type = @callable_type
     @phone.save
-    # redirect_to provider_path(@provider)
+    redirect_to provider_path(@callable.id)
+  end
+
+  def destroy
+    @phone = Phone.find(params[:id])
+    @phone.destroy
+    # redirect_to ???_path, status: :see_other
   end
 
   private

@@ -15,7 +15,8 @@ Rails.application.routes.draw do
   resources :batches
 
   resources :providers do
-    resources :phones
+    resources :phones, only: [:new, :create]
   end
 
+  resources :phones, only: [:destroy]
 end
