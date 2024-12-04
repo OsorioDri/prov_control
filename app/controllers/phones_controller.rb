@@ -1,27 +1,34 @@
 class PhonesController < ApplicationController
+  before_action :set_callable, only: [:new, :create]
 
   def index
     @phones = Provider.order("name").all
   end
 
   def new
-    # We need @provider in our `simple_form_for`
-    @provider = Provider.find(params[:provider_id])
     @phone = Phone.new
+
   end
 
   def create
     @phone = Phone.new(phone_params)
-    raise
-    @phone.provider = @provider
-    @review.save
-    redirect_to provider_path(@provider)
+    # set_callable
+    @phone.callable_id = @callable.id
+    @phone.callable_type = @callable_type
+    @phone.save
+    # redirect_to provider_path(@provider)
   end
 
   private
 
-  def set_provider
-    @provider = Provider.find(params[:provider_id])
+  def set_callable
+    if params[:provider_id].present?
+      @callable = Provider.find(params[:provider_id])
+      @callable_type = "Provider"
+    else
+      @callable = Municipality.find(params[:municipality_id])
+      @callable_type = "Municipality"
+    end
   end
 
   def phone_params

@@ -8,7 +8,7 @@
           <p><strong>Criado em:</strong> <%= @provider.created_at.strftime("%d/%m/%Y") %></p>
           <p><strong>Atualizado em:</strong> <%= @provider.updated_at.strftime("%d/%m/%Y") %></p>
           <p><strong>Telefone(s):</strong>
-          <%= link_to new_provider_phone_path, class: "btn btn-magic" do %>
+          <%= link_to new_provider_phone_path(@provider), class: "btn btn-magic" do %>
             <i class="fas fa-plus-circle"></i>
           <% end %>
           <ul class="list-group">
