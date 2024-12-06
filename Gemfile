@@ -46,6 +46,10 @@ gem "jbuilder"
 # Roo for seeding from Excel file
 gem "roo", "~> 2.10.0"
 
+# Gem to silence warnings in the terminal
+gem 'ostruct', '~> 0.6.1'
+gem 'csv', '~> 3.3'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
