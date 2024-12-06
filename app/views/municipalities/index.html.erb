@@ -1,1 +1,21 @@
-<h1>All municipalities</h1>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-12" data-controller="search-municipalities">
+      <h1 class="text-center">Lista Geral de Municípios</h1>
+
+      <%= form_with url: municipalities_path, method: :get, class: "d-flex p-4", html: { data: { search_municipalities_target: 'form'}} do %>
+        <%= text_field_tag :query,
+            params[:query],
+            class: "form-control",
+            placeholder: "Digite um município",
+            data: { search_municipalities_target: 'input' } 
+        %>
+      <% end %>
+
+
+      <% @municipalities.each do |municipality| %>
+        <%= link_to municipality.name, municipality_path(municipality)  %>
+      <% end %>
+    </div>
+  </div>
+</div>
