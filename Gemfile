@@ -50,6 +50,9 @@ gem "roo", "~> 2.10.0"
 gem 'ostruct', '~> 0.6.1'
 gem 'csv', '~> 3.3'
 
+# Gem to sensible info
+gem 'dotenv', '~> 3.1', '>= 3.1.4'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
@@ -76,6 +79,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  gem 'letter_opener'
+
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
