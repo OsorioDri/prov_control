@@ -1,6 +1,6 @@
 <div class="container">
-  <div class="row justify-content-center">
-    <div class="col-lg-10 col-12" data-controller="search-municipalities">
+  <div class="row justify-content-center" data-controller="search-municipalities">
+    <div class="col-lg-10 col-12">
       <h1 class="text-center">Lista Geral de Municípios</h1>
 
       <%= form_with url: municipalities_path, method: :get, class: "d-flex p-4", html: { data: { search_municipalities_target: 'form'}} do %>
@@ -8,14 +8,15 @@
             params[:query],
             class: "form-control",
             placeholder: "Digite um município",
-            data: { search_municipalities_target: 'input' } 
+            data: { search_municipalities_target: 'input',
+            action: 'keyup->search-municipalities#update' } 
         %>
       <% end %>
 
-
-      <% @municipalities.each do |municipality| %>
-        <%= link_to municipality.name, municipality_path(municipality)  %>
-      <% end %>
+        
+      <%= render 'municipalities/list', municipalities: @municipalities %>
+       
+  
     </div>
   </div>
 </div>

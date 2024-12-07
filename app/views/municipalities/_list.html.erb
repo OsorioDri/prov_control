@@ -1,0 +1,11 @@
+<div class="list" data-search-municipalities-target="list">
+  <div class="container">
+    <div class="row justify-content-center">
+      <% municipalities.each do |municipality| %>
+        <div class="col-3 border p-2 m-2 rounded text-center">
+          <%= link_to municipality.name, municipality_path(municipality), class: 'text-dark'  %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
