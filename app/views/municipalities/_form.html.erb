@@ -1,0 +1,20 @@
+<%= simple_form_for(municipality) do |f| %>
+  <%= f.input :name, label: 'Nome:' %>
+  <%= f.input :contact_name, label: 'Contato:' %>
+  <%= f.input :contact_title, label: 'Cargo:' %>
+  <%= f.input :original_coordinator, label: 'Coordenador original:' %>
+  <%= f.input :number_of_attempts, label: 'Número de tentativas:' %>
+  <%= f.input :date_last_attempt, label: 'Data última tentativa:' %>
+  <%= f.input :contact_effective, label: 'Contato funcionou?' %>
+  <%= f.input :official_letter_sent, label: 'Carta oficial enviada?' %>
+  <%= f.input :capital_city, label: 'Capital?' %>
+  <%= f.association :state, collection: State.order(:name), label: 'Estado:' %>
+  <%= f.association :batch, collection: Batch.order(:start_date), label_method: ->(batch) { "#{batch.start_date.strftime("%d/%m/%Y")} - #{batch.end_date.strftime("%d/%m/%Y")}" }, label: 'Batch:' %>
+  <%= f.association :user, 
+    collection: User.order(:first_name), 
+    label_method: ->(user) { "#{user.first_name} #{user.last_name}" }, 
+    label: 'Usuário' %>
+    <div class="d-grid gap-2">
+      <%= f.submit "Criar Município", class: 'btn btn-primary' %>
+    </div>
+<% end %>
