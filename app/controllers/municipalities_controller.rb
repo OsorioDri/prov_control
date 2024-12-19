@@ -45,9 +45,13 @@ class MunicipalitiesController < ApplicationController
 
   def destroy
     @municipality = Municipality.find(params[:id])
-    @municipality.destroy
-
-    redirect_to root_path
+    if @municipality.destroy
+      flash[:notice] = 'Município deletado com sucesso.'
+      redirect_to root_path
+    else 
+      flash[:alert] = 'Não é possível deletar um município com enrollments ativos.' 
+    end
+    redirect_to municipality_path(@municipality)
   end
 
   def meus_municipios 
