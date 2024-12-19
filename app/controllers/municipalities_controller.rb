@@ -26,8 +26,28 @@ class MunicipalitiesController < ApplicationController
     end
   end
 
+  def edit
+    @municipality = Municipality.find(params[:id])
+  end
+
+  def update 
+    @municipality = Municipality.find(params[:id])
+    if @municipality.update(municipality_params)
+      redirect_to(@municipality)
+    else
+      render :edit, status: :unprocessable_entity
+    end 
+  end
+
   def show 
     @municipality = Municipality.find(params[:id])
+  end
+
+  def destroy
+    @municipality = Municipality.find(params[:id])
+    @municipality.destroy
+
+    redirect_to root_path
   end
 
   def meus_municipios 
