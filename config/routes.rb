@@ -19,4 +19,8 @@ Rails.application.routes.draw do
   end
 
   resources :phones, only: [:destroy]
+
+  resources :municipalities 
+  
+  get 'meus_municipios', to: 'municipalities#meus_municipios'
 end
